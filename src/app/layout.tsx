@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans } from 'next/font/google'; // Import DM Sans
 import "./globals.css";
+import { Toaster } from 'react-hot-toast'; // New import
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,6 +13,14 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Define DM Sans
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,10 +35,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // Apply the new font variables. DM Sans for sans, Times New Roman for serif.
+        // Geist fonts can remain for monospaced or specific elements if desired.
+        className={`${dmSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="min-h-screen bg-background text-foreground">
+          <main className="container mx-auto px-4 py-8">
+            {children}
+          </main>
+        </div>
+        <Toaster />
       </body>
     </html>
   );
 }
+
+
