@@ -6,14 +6,14 @@
   
   /* Collegiate Palette */
   --color-primary: #003366; /* Navy Blue */
-  --color-secondary: #c5b358; /* Vegas Gold/Brass */
+  --color-secondary: #B89E68; /* Antique Gold */
   --color-accent: #800000; /* Maroon/Burgundy */
   
   --color-primary-light: #335c85; /* Lighter Navy */
   --color-primary-dark: #001a33; /* Darker Navy */
   
-  --color-secondary-light: #e0d699; /* Lighter Gold */
-  --color-secondary-dark: #8a7d3d; /* Darker Gold */
+  --color-secondary-light: #D4C4A3; /* Pale Gold */
+  --color-secondary-dark: #8C7345; /* Dark Bronze */
   
   --font-serif: var(--font-playfair-display);
   --font-sans: var(--font-dm-sans);
