@@ -1,25 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-primary: #b4522a;
-  --color-secondary: #2e2e2e;
-  --color-accent: #7a6151;
+  --background: #fdfbf7; /* Creamy White - "Paper" */
+  --foreground: #1a1a1a; /* Dark Gray - nearly Black */
+  
+  /* Collegiate Palette */
+  --color-primary: #003366; /* Navy Blue */
+  --color-secondary: #c5b358; /* Vegas Gold/Brass */
+  --color-accent: #800000; /* Maroon/Burgundy */
+  
+  --color-primary-light: #335c85; /* Lighter Navy */
+  --color-primary-dark: #001a33; /* Darker Navy */
+  
+  --color-secondary-light: #e0d699; /* Lighter Gold */
+  --color-secondary-dark: #8a7d3d; /* Darker Gold */
+  
+  --font-serif: var(--font-playfair-display);
+  --font-sans: var(--font-dm-sans);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-dm-sans); /* Use DM Sans as main sans-serif */
-  --font-serif: 'Times New Roman', Times, serif; /* Generic serif font stack */
+  
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #fdfbf7; /* Off-white text on dark */
+    
+    /* Slightly adjusted for dark mode */
+    --color-primary: #336699; /* Brighter Navy */
+    --color-secondary: #d4af37; /* Metallic Gold */
+    --color-accent: #a00000; /* Brighter Maroon */
   }
 }
 
@@ -29,7 +50,36 @@ body {
   font-family: var(--font-sans); /* Default to DM Sans */
 }
 
-/* You might want to define a class for serif text where needed, e.g., for headings */
+/* Typography styles for "lux" feel */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-primary);
+}
+
+/* Example button styles to match the theme */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-primary-dark);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-dark);
 }
