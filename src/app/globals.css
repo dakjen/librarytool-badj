@@ -32,17 +32,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #fdfbf7; /* Off-white text on dark */
-    
-    /* Slightly adjusted for dark mode */
-    --color-primary: #336699; /* Brighter Navy */
-    --color-secondary: #d4af37; /* Metallic Gold */
-    --color-accent: #a00000; /* Brighter Maroon */
-  }
-}
+
 
 body {
   background: var(--background);
