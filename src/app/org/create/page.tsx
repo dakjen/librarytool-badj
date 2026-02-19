@@ -70,7 +70,7 @@ export default function CreateOrganization() {
                 name="name"
                 type="text"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-gray-900 bg-white"
                 placeholder="e.g. My Awesome Library"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -125,7 +125,7 @@ export default function CreateOrganization() {
                 id="logoUrl"
                 name="logoUrl"
                 type="url"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-gray-900 bg-white"
                 placeholder="https://example.com/logo.png"
                 value={logoUrl}
                 onChange={(e) => setLogoUrl(e.target.value)}

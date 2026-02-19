@@ -21,14 +21,17 @@ export async function POST(request: Request) {
     const slug = generateSlug(name); // Generate a slug from the name
 
     // Check if an organization with the same slug already exists
+    // Only select the 'id' to check for existence, avoiding unnecessary column fetches
     const existingOrg = await db.query.organizations.findFirst({
       where: (orgs, { eq }) => eq(orgs.slug, slug),
+      columns: { id: true }, 
     });
 
     if (existingOrg) {
       return NextResponse.json({ error: 'Organization with this name already exists' }, { status: 409 });
     }
 
+    // Explicitly return only necessary columns to avoid issues with potentially missing schema columns in runtime
     const [newOrganization] = await db.insert(organizations).values({
       name,
       slug,
@@ -37,7 +40,10 @@ export async function POST(request: Request) {
       secondaryColor: secondaryColor || null,
       accentColor: accentColor || null,
       logoUrl: logoUrl || null,
-    }).returning();
+    }).returning({
+      id: organizations.id,
+      slug: organizations.slug,
+    });
 
     if (!newOrganization) {
       return NextResponse.json({ error: 'Failed to create organization' }, { status: 500 });
