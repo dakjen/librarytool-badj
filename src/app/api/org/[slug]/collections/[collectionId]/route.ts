@@ -4,6 +4,34 @@ import { collections } from '@/db/schema';
 import { getUserIdFromRequest } from '@/lib/auth';
 import { eq, and } from 'drizzle-orm';
 
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ slug: string; collectionId: string }> }
+) {
+  try {
+    const userId = await getUserIdFromRequest();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const resolvedParams = await params;
+    const { collectionId } = resolvedParams;
+
+    const collection = await db.query.collections.findFirst({
+      where: eq(collections.id, collectionId),
+    });
+
+    if (!collection) {
+      return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(collection);
+  } catch (error) {
+    console.error('Error fetching collection:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ slug: string; collectionId: string }> }
