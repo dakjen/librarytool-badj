@@ -8,7 +8,10 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { toast } from 'react-hot-toast';
 import { 
   Video, File, FileText, Link as LinkIcon, Code,
-  BookOpen, PlusCircle
+  BookOpen, PlusCircle, Image as ImageIcon, Music, 
+  Headphones, Mic, Monitor, Database, Globe, Archive, 
+  Folder, Clipboard, Award, GraduationCap, Lightbulb, PenTool,
+  Presentation, Check
 } from 'lucide-react';
 
 interface ItemFormProps {
@@ -41,12 +44,35 @@ const getItemTypeName = (type: string) => {
   }
 }
 
+const ICON_OPTIONS = [
+  { name: 'book-open', icon: BookOpen },
+  { name: 'file-text', icon: FileText },
+  { name: 'video', icon: Video },
+  { name: 'image', icon: ImageIcon },
+  { name: 'music', icon: Music },
+  { name: 'headphones', icon: Headphones },
+  { name: 'mic', icon: Mic },
+  { name: 'monitor', icon: Monitor },
+  { name: 'code', icon: Code },
+  { name: 'database', icon: Database },
+  { name: 'globe', icon: Globe },
+  { name: 'link', icon: LinkIcon },
+  { name: 'archive', icon: Archive },
+  { name: 'folder', icon: Folder },
+  { name: 'clipboard', icon: Clipboard },
+  { name: 'award', icon: Award },
+  { name: 'graduation-cap', icon: GraduationCap },
+  { name: 'lightbulb', icon: Lightbulb },
+  { name: 'pen-tool', icon: PenTool },
+  { name: 'presentation', icon: Presentation },
+];
+
 function ItemForm({ slug, collectionId, itemType, organizationId, onItemCreated }: ItemFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [contentUrl, setContentUrl] = useState('');
   const [articleContent, setArticleContent] = useState('');
-  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState('book-open'); // Default icon
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -102,9 +128,9 @@ function ItemForm({ slug, collectionId, itemType, organizationId, onItemCreated 
       title,
       description,
       type: itemType,
-      thumbnailUrl: thumbnailUrl || null,
-      isFavorite: false, // Default to not favorite on creation
-      orderIndex: 0,     // Default order index, will be re-indexed on fetch
+      thumbnailUrl: `icon:${selectedIcon}`, // Store selected icon
+      isFavorite: false, 
+      orderIndex: 0,
     };
 
     if (['video', 'embed', 'link', 'pdf'].includes(itemType)) {
@@ -124,7 +150,7 @@ function ItemForm({ slug, collectionId, itemType, organizationId, onItemCreated 
 
       if (response.ok) {
         toast.success(`${getItemTypeName(itemType)} item created successfully!`);
-        onItemCreated(); // Notify parent component
+        onItemCreated(); 
       } else {
         const data = await response.json();
         setError(data.error || 'Failed to create item');
@@ -217,16 +243,31 @@ function ItemForm({ slug, collectionId, itemType, organizationId, onItemCreated 
         </div>
       )}
 
+      {/* Icon Chooser */}
       <div>
-        <label htmlFor="thumbnailUrl" className="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL (Optional)</label>
-        <input
-          id="thumbnailUrl"
-          type="url"
-          value={thumbnailUrl}
-          onChange={(e) => setThumbnailUrl(e.target.value)}
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 bg-white"
-          placeholder="https://example.com/thumbnail.jpg"
-        />
+        <label className="block text-sm font-medium text-gray-700 mb-3">Choose an Icon</label>
+        <div className="grid grid-cols-5 sm:grid-cols-8 gap-3">
+          {ICON_OPTIONS.map((option) => {
+            const IconComponent = option.icon;
+            const isSelected = selectedIcon === option.name;
+            return (
+              <div
+                key={option.name}
+                onClick={() => setSelectedIcon(option.name)}
+                className={`
+                  cursor-pointer p-3 rounded-lg flex items-center justify-center transition-all
+                  ${isSelected 
+                    ? 'bg-primary text-white shadow-md transform scale-105' 
+                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }
+                `}
+                title={option.name}
+              >
+                <IconComponent className="w-6 h-6" />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
@@ -255,12 +296,11 @@ export default function AddItemFormPage() {
   const params = useParams();
   const slug = params.slug as string;
   const collectionId = params.collectionId as string;
-  const itemType = params.type as string; // From the dynamic route [type]
+  const itemType = params.type as string; 
   const router = useRouter();
   const { organization } = useOrganization();
 
   const handleItemCreated = () => {
-    // Redirect back to the collection items page after successful creation
     router.push(`/org/${slug}/collections/${collectionId}/items`);
   };
 
@@ -272,7 +312,6 @@ export default function AddItemFormPage() {
     );
   }
 
-  // Basic validation for itemType from URL
   const validItemTypes = ['video', 'pdf', 'article', 'embed', 'link'];
   if (!validItemTypes.includes(itemType)) {
     return (

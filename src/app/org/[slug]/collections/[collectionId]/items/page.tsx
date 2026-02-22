@@ -6,19 +6,11 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { 
-  Star, 
-  BookOpen, 
-  PenLine, 
-  Trash2, 
-  PlusCircle, 
-  ChevronUp, 
-  ChevronDown,
-  LayoutList,
-  Pin,
-  FileText,
-  Video,
-  File,
-  Link as LinkIcon
+  Star, BookOpen, PenLine, Trash2, PlusCircle, ChevronUp, 
+  LayoutList, FileText, Video, File, Link as LinkIcon, Code,
+  Image as ImageIcon, Music, Headphones, Mic, Monitor, Database, 
+  Globe, Archive, Folder, Clipboard, Award, GraduationCap, 
+  Lightbulb, PenTool, Presentation
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 
@@ -44,16 +36,60 @@ interface Item {
   createdAt: string;
 }
 
+const ICON_MAP: { [key: string]: any } = {
+  'book-open': BookOpen,
+  'file-text': FileText,
+  'video': Video,
+  'image': ImageIcon,
+  'music': Music,
+  'headphones': Headphones,
+  'mic': Mic,
+  'monitor': Monitor,
+  'code': Code,
+  'database': Database,
+  'globe': Globe,
+  'link': LinkIcon,
+  'archive': Archive,
+  'folder': Folder,
+  'clipboard': Clipboard,
+  'award': Award,
+  'graduation-cap': GraduationCap,
+  'lightbulb': Lightbulb,
+  'pen-tool': PenTool,
+  'presentation': Presentation,
+};
+
 const getItemIcon = (type: string) => {
   switch (type) {
     case 'video': return <Video className="w-4 h-4 text-blue-500" />;
     case 'pdf': return <File className="w-4 h-4 text-red-500" />;
     case 'article': return <FileText className="w-4 h-4 text-green-500" />;
     case 'link': return <LinkIcon className="w-4 h-4 text-purple-500" />;
-    case 'embed': return <LayoutList className="w-4 h-4 text-orange-500" />;
+    case 'embed': return <Code className="w-4 h-4 text-orange-500" />;
     default: return null;
   }
 }
+
+const renderThumbnail = (thumbnailUrl: string | undefined, title: string) => {
+  if (!thumbnailUrl) return null;
+
+  if (thumbnailUrl.startsWith('icon:')) {
+    const iconName = thumbnailUrl.replace('icon:', '');
+    const IconComponent = ICON_MAP[iconName] || BookOpen; // Default to BookOpen if not found
+    
+    return (
+      <div className="h-48 w-full bg-gray-50 flex items-center justify-center">
+        <IconComponent className="w-20 h-20 text-gray-300" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-48 relative overflow-hidden">
+      <img src={thumbnailUrl} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+    </div>
+  );
+};
 
 export default function CollectionItemsPage() {
   const { organization, loading: orgLoading, error: orgError } = useOrganization();
@@ -283,11 +319,7 @@ export default function CollectionItemsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {favoriteItems.map((item) => (
               <div key={item.id} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group">
-                {item.thumbnailUrl && (
-                  <div className="h-48 relative overflow-hidden">
-                    <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  </div>
-                )}
+                {renderThumbnail(item.thumbnailUrl, item.title)}
                 <div className="p-6 flex-grow">
                   <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.description || 'No description provided.'}</p>
