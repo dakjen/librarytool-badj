@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfbf7; /* Creamy White - "Paper" */
+  --background: #ffffff; /* Pure White */
   --foreground: #1a1a1a; /* Dark Gray - nearly Black */
   
   /* Collegiate Palette */

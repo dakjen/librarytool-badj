@@ -15,6 +15,13 @@
       "when": 1771367849875,
       "tag": "0001_natural_katie_power",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771523248148,
+      "tag": "0002_deep_prism",
+      "breakpoints": true
     }
   ]
 }

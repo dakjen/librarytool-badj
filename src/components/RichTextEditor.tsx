@@ -214,6 +214,7 @@ export default function RichTextEditor({ content, onChange, editable = true }: R
         allowBase64: true,
       }),
     ],
+    immediatelyRender: false,
     content: content ? JSON.parse(content) : '',
     onUpdate: ({ editor }) => {
       onChange(JSON.stringify(editor.getJSON()));

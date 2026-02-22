@@ -89,6 +89,8 @@ export const items = pgTable("items", {
   contentUrl: text("content_url"), // For video, pdf, embed, link
   articleContent: jsonb("article_content"), // For article (JSON from TipTap)
   thumbnailUrl: text("thumbnail_url"),
+  isFavorite: boolean("is_favorite").default(false), // NEW FIELD for favorites
+  orderIndex: integer("order_index").default(0), // NEW FIELD for ordering
   createdById: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

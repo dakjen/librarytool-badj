@@ -17,7 +17,7 @@ async function getOrganizationIdFromSlug(slug: string) {
 
 export async function GET(
   request: NextRequest,
-  context: any // Removed type annotation to bypass Turbopack bug
+  context: { params: Promise<{ slug: string; collectionId: string; }> }
 ) {
   try {
     const userId = await getUserIdFromRequest();
@@ -51,6 +51,7 @@ export async function GET(
         eq(items.organizationId, organizationId),
         eq(items.collectionId, collectionId)
       ),
+      orderBy: (items, { asc, desc }) => [desc(items.isFavorite), asc(items.orderIndex), asc(items.createdAt)],
     });
 
     return NextResponse.json(collectionItems, { status: 200 });
@@ -62,7 +63,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  context: any // Removed type annotation to bypass Turbopack bug
+  context: { params: Promise<{ slug: string; collectionId: string; }> }
 ) {
   try {
     const userId = await getUserIdFromRequest();
@@ -77,7 +78,7 @@ export async function POST(
       return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
     }
 
-    const { title, description, type, contentUrl, articleContent, thumbnailUrl } = await request.json();
+    const { title, description, type, contentUrl, articleContent, thumbnailUrl, isFavorite, orderIndex } = await request.json();
 
     if (!title || !type) {
       return NextResponse.json({ error: 'Title and type are required' }, { status: 400 });
@@ -111,6 +112,8 @@ export async function POST(
       contentUrl: contentUrl || null,
       articleContent: articleContent || null,
       thumbnailUrl: thumbnailUrl || null,
+      isFavorite: isFavorite || false, // Default to false
+      orderIndex: orderIndex || 0,     // Default to 0
       createdById: userId,
     }).returning();
 
