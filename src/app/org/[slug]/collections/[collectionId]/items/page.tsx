@@ -200,6 +200,27 @@ export default function CollectionItemsPage() {
     }
   };
 
+  const handleDeleteItem = async (itemId: string) => {
+    if (!organization || !confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
+
+    try {
+      const response = await fetch(`/api/org/${organization.slug}/collections/${collectionId}/items/${itemId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+        toast.success('Item deleted successfully!');
+      } else {
+        const data = await response.json();
+        toast.error(data.error || 'Failed to delete item.');
+      }
+    } catch (err) {
+      console.error('Error deleting item:', err);
+      toast.error('An unexpected error occurred.');
+    }
+  };
+
   const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
@@ -325,13 +346,22 @@ export default function CollectionItemsPage() {
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.description || 'No description provided.'}</p>
                   <div className="flex justify-between items-center text-sm">
                     <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700 capitalize text-xs">{item.type}</span>
-                    <button
-                      onClick={() => toggleFavorite(item.id, item.isFavorite)}
-                      className="p-1 rounded-full text-secondary-dark hover:bg-gray-100 transition-colors"
-                      title="Unfavorite Item"
-                    >
-                      <Star className="w-5 h-5" fill="currentColor" />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => toggleFavorite(item.id, item.isFavorite)}
+                        className="p-1 rounded-full text-secondary-dark hover:bg-gray-100 transition-colors"
+                        title="Unfavorite Item"
+                      >
+                        <Star className="w-5 h-5" fill="currentColor" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteItem(item.id)}
+                        className="p-1 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors"
+                        title="Delete Item"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
@@ -408,7 +438,13 @@ export default function CollectionItemsPage() {
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-50">
                           <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700 capitalize text-xs">{item.type}</span>
-                          <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500 cursor-pointer" /> {/* Placeholder for delete */}
+                          <button
+                            onClick={() => handleDeleteItem(item.id)}
+                            className="p-1 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors"
+                            title="Delete Item"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
                     )}

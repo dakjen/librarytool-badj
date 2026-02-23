@@ -39,3 +39,34 @@ export async function PUT(
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ slug: string; collectionId: string; itemId: string }> }
+) {
+  try {
+    const userId = await getUserIdFromRequest();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const resolvedParams = await params;
+    const { itemId } = resolvedParams;
+
+    // TODO: Add stricter permission checks (e.g., is owner or admin)
+
+    const [deletedItem] = await db
+      .delete(items)
+      .where(eq(items.id, itemId))
+      .returning();
+
+    if (!deletedItem) {
+      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
